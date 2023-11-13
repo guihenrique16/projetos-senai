@@ -1,10 +1,10 @@
-import React from 'react';
+import React from "react";
 
-const Button = (props) => {
-    return (
-        <div>
-            <button id={props.id} type={props.type}>{props.textoBotao}</button>
-        </div>
+const Button = (props) => {//constructor
+  return (
+    <button type={props.tipo}>
+      {props.textoBotao}
+    </button>
     );
 };
 

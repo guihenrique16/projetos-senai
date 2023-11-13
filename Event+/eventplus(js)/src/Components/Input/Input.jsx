@@ -1,21 +1,23 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 
-const Input = (props) => {
-    const [meuValor, setMeuValor] = useState();
-    return (
-        <div>
-            <input type={props.tipo} 
-            id={props.id}
-            name={props.name}
-            placeholder={props.placeholder} 
-            value={props.value}
-            onChange={(e)=> {
-                props.fnAltera(e.target.value)
+const Input = (props) => {//construtor
+  
+
+  return (
+    <div>
+      <input 
+            type={props.tipo} 
+            id={props.id} 
+            name={props.nome} 
+            placeholder={props.dicaCampo} 
+            value={props.valor}
+            onChange={(e)=>{
+              props.fnAltera(e.target.value)//valor do input
             }}
-            />
-            <span>{props.valor}</span>
-        </div>
-    );
+        />
+        <span>{props.valor}</span>
+    </div>
+  );
 };
 
 export default Input;

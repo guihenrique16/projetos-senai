@@ -1,60 +1,60 @@
-import React, { useState } from "react";
-import "./HomePage.css";
-import VisionSection from "../../Components/VisionSection/VisionSection";
+import React, { useEffect, useState } from "react";
+import './HomePage.css'
 import MainContent from "../../Components/MainContent/MainContent";
 import Banner from "../../Components/Banner/Banner";
+import VisionSection from "../../Components/VisionSection/VisionSection";
 import ContactSection from "../../Components/ContactSection/ContactSection";
 import NextEvent from "../../Components/NextEvent/NextEvent";
-import Container from "../../Components/Container/Container";
 import Title from "../../Components/Title/Title";
+import Container from "../../Components/Container/Container";
+import api from "../../Services/Service";
 
 const HomePage = () => {
-  // fake mock = api mocada
-  const [nextEvents, setNext] = useState([  
-    {
-      id: 1,
-      title: "Evento X",
-      descricao: "Evento de SQL Server",
-      date: "10/11/2023",
-    },
-    { 
-        id: 2, 
-        title: "Evento Y", 
-        descricao: "Evento de js", 
-        date: "11/11/2023" },
-    { 
-        id: 3, 
-        title: "Evento Z", 
-        descricao: "Evento de API", 
-        date: "12/11/2023" },
-    { 
-        id: 4, 
-        title: "Evento A", 
-        descricao: "Evento de CSS", 
-        date: "13/11/2023" },
-  ]);
+  
+    useEffect(()=> {
+      // chamar a api
+      async function getProximosEventos() {
+        try {
+
+          const promise = await api.get("/Evento/ListarProximos");
+
+          setNextEvents(promise.data);
+
+        } catch (error) {
+          console.log('Deu ruim na api');
+        }
+      }
+      getProximosEventos();
+        console.log("A HOME FOI MONTADA!!!!");
+    }, []);
+
+  // fake mock - api mocada
+  const [nextEvents, setNextEvents] = useState([]);
+
   return (
     <MainContent>
       <Banner />
 
+      {/* PRÓXIMOS EVENTOS */}
       <section className="proximos-eventos">
         <Container>
-          <Title titleText={"Proximos eventos"} />
+          <Title titleText={"Próximos Eventos"} />
+
           <div className="events-box">
-
+            
             {
-                nextEvents.map((e) => {
-                    return(
-                        <NextEvent
-                            title={e.title}
-                            description={e.descricao}
-                            eventDate={e.date}
-                            idEvento={e.id}
-                        />
-                    );
-                })
+              nextEvents.map((e) => {
+                return(
+                    <NextEvent
+                      title={e.nomeEvento}
+                      description={ e.descricao}
+                      eventDate={e.dataEvento}
+                      idEvento={e.idEvento}
+                    />
+                );
+              })
             }
-
+            
           </div>
         </Container>
       </section>

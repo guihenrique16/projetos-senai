@@ -24,7 +24,7 @@
 
     opacity: 0;
     background-color: #B51D44;
-    transition: left .0s, opacity .5s;
+    transition: left .4s, opacity .5s;
 }
 
 .navbar__close {

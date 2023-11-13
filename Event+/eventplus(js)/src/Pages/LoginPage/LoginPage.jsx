@@ -4,9 +4,7 @@ import Title from '../../Components/Title/Title';
 const LoginPage = () => {
     return (
         <div>
-              <Title
-                titleText={"LOGIN PAGE"}
-            />
+            <Title titleText={"Página de Login"} />
         </div>
     );
 };
