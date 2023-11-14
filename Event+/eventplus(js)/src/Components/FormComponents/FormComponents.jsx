@@ -1,4 +1,5 @@
 import React from 'react';
+import './FormComponents.css'
 
 export const Input =({
     type,
@@ -24,4 +25,25 @@ export const Input =({
         autoComplete='off'
         />
     );
+}
+
+export const Button = ({
+    id,
+    name,
+    type,
+    additionalClass ='',
+    textButton,
+    manipulationFunction
+}) => {
+    return(
+        <button 
+        type={type}
+        name={name}
+        id={id}
+        className={`button-component ${additionalClass}`}
+        onClick={manipulationFunction}
+        >
+           {textButton}
+        </button>
+    )
 }
