@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./TipoEventosPage.css";
 import Title from "../../Components/Title/Title";
 import MainContent from "../../Components/MainContent/MainContent";
@@ -8,15 +8,27 @@ import Container from "../../Components/Container/Container";
 import { Button, Input } from "../../Components/FormComponents/FormComponents";
 import api from "../../Services/Service";
 import TableTp from "./TableTp/TableTp";
+import Notification from "../../Components/Notification/Notification";
 
 const TipoEventosPage = () => {
+  const [notifyUser, setNotifyUser] = useState({});
+
   const [frmEdit, setFrmEdit] = useState(false);
   const [titulo,setTitulo] = useState("");
-  const [TipoEventos, setTipoEventos] = useState([
-    {"idTipoEvento": "123","titulo": "HTML"},
-    {"idTipoEvento": "456","titulo": "CSS"},
-    {"idTipoEvento": "789","titulo": "JS"}
-  ]);
+  const [TipoEventos, setTipoEventos] = useState([]);
+
+  useEffect(()=> {
+    async function getTipoEventos() {
+      try {
+        const promise = await api.get("/TiposEvento");
+        setTipoEventos(promise.data);
+      } catch (error) {
+        console.log('Deu ruim na api');
+        console.log(error);
+      }
+    }
+     getTipoEventos();
+  }, [TipoEventos]);
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -30,6 +42,14 @@ const TipoEventosPage = () => {
     try {
         const retorno = await api.post("/TiposEvento", {titulo: titulo})
         console.log("Cadastrado com sucesso");
+        setNotifyUser({
+          titleNote: "Sucesso",
+          textNote: `Cadastrado com sucesso!`,
+          imgIcon: "success",
+          imgAlt:
+            "Imagem de ilustração de sucesso. Moça segurando um balão com símbolo de confirmação ok.",
+          showMessage: true,
+        }); 
         console.log(retorno.data);
         setTitulo("");//limpa a variavel
     } catch (error) {
@@ -38,7 +58,7 @@ const TipoEventosPage = () => {
     }
   }
 
-  function handleUpdate() {
+  function handleUpdate(e) {
     console.log("bora atualizar");
   }
 
@@ -54,12 +74,23 @@ const TipoEventosPage = () => {
     alert('bora la apagar na api')
   }
 
-  function handleDelete() {
-    
+  async function handleDelete(id) {
+    try {
+      await api.delete(`/TiposEvento/${id}`)
+      console.log("deletado com sucesso");
+
+      const retornoGet = await api.get("/TiposEvento")
+      setTipoEventos(retornoGet.data);
+
+  } catch (error) {
+      console.log("deu ruim na api");
+      console.log(error);
+  }
   }
 
   return (
     <MainContent>
+      <Notification {...notifyUser} setNotifyUser={setNotifyUser}/>
       {/* CADASTRO DE TIPO DE EVENTOS */}
       <section className="cadastro-evento-section">
 
