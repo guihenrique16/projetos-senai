@@ -33,7 +33,7 @@ const TableTp = ({dados, fnUpdate, fnDelete}) => {
                           className="table-data__icon" 
                           src={editPen} alt="" 
                           onClick={() =>{
-                              fnUpdate()
+                              fnUpdate(tp.idTipoEvento)
                           }}
                           />
                     </td>
