@@ -4,17 +4,34 @@ import MainContent from "../../Components/MainContent/MainContent";
 import Title from "../../Components/Title/Title";
 import ImageIllustrator from "../../Components/ImageIllustrator/ImageIllustrator";
 import eventImage from "../../assets/images/evento.svg";
-import { Button, Input } from "../../Components/FormComponents/FormComponents";
+import { Button, Input, Select } from "../../Components/FormComponents/FormComponents";
 import TableTpEvent from "./TableTpEvent/TableTpEvent";
 import api from '../../Services/Service'
+import Notification from "../../Components/Notification/Notification";
 
 const EventosPage = () => {
+  const [notifyUser, setNotifyUser] = useState({});
   const [frmEdit, setFrmEdit] = useState(false);
-  const [titulo, setTitulo] = useState("");
+  const [nomeEvento, setNomeEvento] = useState("");
   const [descricao, setDescricao] = useState("");
+  const [data, setData] = useState("");
+  const [opcoes, setOpcoes] = useState("");
   const [eventos, setEventos] = useState([]);
+  const [tiposEvento, setTiposEvento] = useState([]);
+  const [idEvento, setIdEvento] = useState([]);
 
   useEffect(() => {
+    async function getTiposEvento() {
+      try {
+        const promise = await api.get("/TiposEvento");
+        setTiposEvento(promise.data);
+      } catch (error) {
+        console.log("Deu ruim na api");
+        console.log(error);
+      }
+    }
+    getTiposEvento();
+
     async function getEventos() {
       try {
         const promise = await api.get("/Evento");
@@ -25,19 +42,93 @@ const EventosPage = () => {
       }
     }
     getEventos();
-  }, [eventos]);
+  },  [tiposEvento], [eventos]);
 
-  async function signUpEvent(e) {
+  async function handleSubmit(e) {
     e.preventDefault();
+    if (nomeEvento.trim().length < 3) {
+      alert("O titulo deve ter ao menos 3 caracteres");
+      return;
+    }
+    //chamar api
+    try {
+      const retorno = await api.post("/Evento", {nomeEvento: nomeEvento});
+      setNotifyUser({
+        titleNote: "Sucesso",
+        textNote: `Evento cadastrado com sucesso!`,
+        imgIcon: "success",
+        imgAlt:
+          "Imagem de ilustração de sucesso. Moça segurando um balão com símbolo de confirmação ok.",
+        showMessage: true,
+      });
+      console.log(retorno.data);
+      setTitulo(""); //limpa a variavel
+    } catch (error) {
+      setNotifyUser({
+        titleNote: "Erro",
+        textNote: `erro na api`,
+        imgIcon: "danger",
+        imgAlt: "Imagem de ilustração de danger.",
+        showMessage: true,
+      });
+    }
   }
   async function handleEdit(e) {
     e.preventDefault();
   }
-  async function deleteEvent() {
-    
+  async function deleteEvent(id) {
+    try {
+      await api.delete(`/Evento/${id}`);
+      console.log("deletado com sucesso");
+
+      const retornoGet = await api.get("/Evento");
+      setEventos(retornoGet.data);
+
+      setNotifyUser({
+        titleNote: "Sucesso",
+        textNote: `deletado com sucesso!`,
+        imgIcon: "success",
+        imgAlt:
+          "Imagem de ilustração de sucesso. Moça segurando um balão com símbolo de confirmação ok.",
+        showMessage: true,
+      });
+    } catch (error) {
+      console.log("deu ruim na api");
+      console.log(error);
+    }
   }
+  async function showUpdateForm(idElemento) {
+    setFrmEdit(true);
+    try {
+
+      const retorno = await api.get("/Evento/" + idElemento);
+
+      setTitulo(retorno.data.titulo);
+      setIdEvento(retorno.data.idEvento);
+
+    } catch (error) {
+
+      setNotifyUser({
+        titleNote: "Erro",
+        textNote: `erro0 na api`,
+        imgIcon: "danger",
+        imgAlt: "Imagem de ilustração de danger.",
+        showMessage: true,
+      });
+    }
+  }
+  function editAbort() {
+    setFrmEdit(false);
+    setTitulo("");
+    setDescricao("");
+    setData("");
+    setOpcoes("");
+    setIdEvento(null);
+  }
+  
   return (
     <MainContent>
+      <Notification {...notifyUser} setNotifyUser={setNotifyUser} />
       <section className="cadastro-evento-section">
         <Container>
           <div className="cadastro-evento__box ">
@@ -47,22 +138,21 @@ const EventosPage = () => {
 
             <form
               className="ftipo-evento"
-              onSubmit={frmEdit ? handleEdit : signUpEvent}
+              onSubmit={frmEdit ? handleEdit : handleSubmit}
             >
               {!frmEdit ? (
                 <>
                   <Input
                     type={"text"}
-                    id={"titulo"}
+                    id={"Nome"}
                     name={"titulo"}
                     placeholder={"titulo"}
                     required={"required"}
-                    value={titulo}
+                    value={nomeEvento}
                     manipulationFunction={(e) => {
-                      setTitulo(e.target.value);
+                      setNomeEvento(e.target.value);
                     }}
                   />
-                  {titulo}
 
                   <Input
                     type={"text"}
@@ -75,6 +165,30 @@ const EventosPage = () => {
                       setDescricao(e.target.value);
                     }}
                   />
+
+                  <Select
+                    options={tiposEvento}
+                    id={"select"}
+                    name={"select"}
+                    required={"required"}
+                    defaultValue = {opcoes}
+                    manipulationFunction={(e) => {
+                      setOpcoes(e.target.titulo);
+                    }}
+                    additionalClass=""
+                  />
+
+                  <Input
+                    type={"date"}
+                    id={"data"}
+                    name={"data"}
+                    placeholder={"AA/MM/AAAA"}
+                    required={"required"}
+                    value={data}
+                    manipulationFunction={(e) => {
+                      setData(e.target.value);
+                    }}
+                  />
                   
                   <Button
                     type={"submite"}
@@ -85,16 +199,51 @@ const EventosPage = () => {
                 </>
               ) : (
                 <>
-                  {/* EDITAR */}
                   <Input
                     id="titulo"
                     placeholder="Titulo"
                     name="titulo"
                     type="text"
                     required="required"
-                    value={titulo}
+                    value={nomeEvento}
                     manipulationFunction={(e) => {
-                      setTitulo(e.target.value);
+                      setNomeEvento(e.target.value);
+                    }}
+                  />
+
+                  <Input
+                    type={"text"}
+                    id={"descricao"}
+                    name={"descricao"}
+                    placeholder={"descricao"}
+                    required={"required"}
+                    value={descricao}
+                    manipulationFunction={(e) => {
+                      setDescricao(e.target.value);
+                    }}
+                  />
+
+                  <Select
+                    options={tiposEvento}
+                    id={"select"}
+                    name={"select"}
+                    required={"required"}
+                    defaultValue = {opcoes}
+                    manipulationFunction={(e) => {
+                      setOpcoes(e.target.titulo);
+                    }}
+                    additionalClass=""
+                  />
+
+                  <Input
+                    type={"date"}
+                    id={"data"}
+                    name={"data"}
+                    placeholder={"AA/MM/AAAA"}
+                    required={"required"}
+                    value={data}
+                    manipulationFunction={(e) => {
+                      setData(e.target.value);
                     }}
                   />
 
@@ -111,7 +260,7 @@ const EventosPage = () => {
                       id="cancelar"
                       name="cancelar"
                       type="button"
-                      manipulationFunction={editActionAbort}
+                      manipulationFunction={editAbort}
                       additionalClass="button-component--middle"
                     />
                   </div>

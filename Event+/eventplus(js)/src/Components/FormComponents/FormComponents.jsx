@@ -47,3 +47,29 @@ export const Button = ({
         </button>
     )
 }
+
+export const Select = ({
+    options = [],
+    id,
+    name,
+    required,
+    additionalClass,
+    manipulationFunction,
+    defaultValue
+}) =>{
+    return(
+        <select 
+        name={name} 
+        id={id}
+        required={required}
+        className={`input-component ${additionalClass}`}
+        onChange={manipulationFunction}
+        value={defaultValue}
+        >
+            <option value="">Selecione</option>
+            {options.map((opt) => {
+                return <option key={opt.value} value={opt.idtipoEvento}>{opt.titulo}</option>
+            })}
+        </select>
+    );
+}

@@ -55,8 +55,13 @@ const TipoEventosPage = () => {
       console.log(retorno.data);
       setTitulo(""); //limpa a variavel
     } catch (error) {
-      console.log("deu ruim na api");
-      console.log(error);
+      setNotifyUser({
+        titleNote: "Erro",
+        textNote: `erro na api`,
+        imgIcon: "danger",
+        imgAlt: "Imagem de ilustração de danger.",
+        showMessage: true,
+      });
     }
   }
 
@@ -171,8 +176,6 @@ const TipoEventosPage = () => {
                       setTitulo(e.target.value);
                     }}
                   />
-
-                  {titulo}
 
                   <Button
                     type={"submite"}
