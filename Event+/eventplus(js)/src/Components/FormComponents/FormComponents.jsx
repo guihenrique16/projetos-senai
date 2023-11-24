@@ -53,7 +53,7 @@ export const Select = ({
     id,
     name,
     required,
-    additionalClass,
+    additionalClass = "",
     manipulationFunction,
     defaultValue
 }) =>{
@@ -68,7 +68,7 @@ export const Select = ({
         >
             <option value="">Selecione</option>
             {options.map((opt) => {
-                return <option key={opt.value} value={opt.idtipoEvento}>{opt.titulo}</option>
+                return <option key={opt.idTipoEvento} value={opt.idTipoEvento}>{opt.titulo}</option>
             })}
         </select>
     );

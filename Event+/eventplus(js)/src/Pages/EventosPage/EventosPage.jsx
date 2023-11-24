@@ -4,9 +4,13 @@ import MainContent from "../../Components/MainContent/MainContent";
 import Title from "../../Components/Title/Title";
 import ImageIllustrator from "../../Components/ImageIllustrator/ImageIllustrator";
 import eventImage from "../../assets/images/evento.svg";
-import { Button, Input, Select } from "../../Components/FormComponents/FormComponents";
+import {
+  Button,
+  Input,
+  Select,
+} from "../../Components/FormComponents/FormComponents";
 import TableTpEvent from "./TableTpEvent/TableTpEvent";
-import api from '../../Services/Service'
+import api from "../../Services/Service";
 import Notification from "../../Components/Notification/Notification";
 
 const EventosPage = () => {
@@ -14,35 +18,39 @@ const EventosPage = () => {
   const [frmEdit, setFrmEdit] = useState(false);
   const [nomeEvento, setNomeEvento] = useState("");
   const [descricao, setDescricao] = useState("");
-  const [data, setData] = useState("");
-  const [opcoes, setOpcoes] = useState("");
+  const [data, setData] = useState();
   const [eventos, setEventos] = useState([]);
   const [tiposEvento, setTiposEvento] = useState([]);
+  const [idTipoEvento, setIdTipoEvento] = useState("");
   const [idEvento, setIdEvento] = useState([]);
+  const [instituicao, setInstituicao] = useState(
+    "db4466a6-4ef2-4dc2-af3d-35da525224da"
+  );
 
   useEffect(() => {
-    async function getTiposEvento() {
-      try {
-        const promise = await api.get("/TiposEvento");
-        setTiposEvento(promise.data);
-      } catch (error) {
-        console.log("Deu ruim na api");
-        console.log(error);
-      }
-    }
-    getTiposEvento();
-
     async function getEventos() {
       try {
         const promise = await api.get("/Evento");
         setEventos(promise.data);
+
+        const retorno = await api.get("/TiposEvento");
+        setTiposEvento(retorno.data);
       } catch (error) {
         console.log("Deu ruim na api");
         console.log(error);
       }
     }
     getEventos();
-  },  [tiposEvento], [eventos]);
+  }, []);
+
+  async function atualizaLista() {
+    try {
+      const promise = await api.get("/Evento");
+      setEventos(promise.data);
+    } catch (error) {
+      console.log("erro na api");
+    }
+  }
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -50,9 +58,21 @@ const EventosPage = () => {
       alert("O titulo deve ter ao menos 3 caracteres");
       return;
     }
-    //chamar api
+    // if (eventos.dataEvento<DateTime.now) {
+      
+    // }
     try {
-      const retorno = await api.post("/Evento", {nomeEvento: nomeEvento});
+      const retorno = await api.post("/Evento", {
+        nomeEvento: nomeEvento,
+        descricao: descricao,
+        dataEvento: data,
+        idTipoEvento:  idTipoEvento,
+        idInstituicao: instituicao
+      });
+      
+      atualizaLista() 
+      editAbort()
+
       setNotifyUser({
         titleNote: "Sucesso",
         textNote: `Evento cadastrado com sucesso!`,
@@ -62,15 +82,17 @@ const EventosPage = () => {
         showMessage: true,
       });
       console.log(retorno.data);
-      setTitulo(""); //limpa a variavel
+  
+
     } catch (error) {
       setNotifyUser({
         titleNote: "Erro",
-        textNote: `erro na api`,
+        textNote: `erro ao cadastrar`,
         imgIcon: "danger",
         imgAlt: "Imagem de ilustração de danger.",
         showMessage: true,
       });
+      console.log(error);
     }
   }
   async function handleEdit(e) {
@@ -81,8 +103,7 @@ const EventosPage = () => {
       await api.delete(`/Evento/${id}`);
       console.log("deletado com sucesso");
 
-      const retornoGet = await api.get("/Evento");
-      setEventos(retornoGet.data);
+      atualizaLista()
 
       setNotifyUser({
         titleNote: "Sucesso",
@@ -100,32 +121,20 @@ const EventosPage = () => {
   async function showUpdateForm(idElemento) {
     setFrmEdit(true);
     try {
-
       const retorno = await api.get("/Evento/" + idElemento);
 
       setTitulo(retorno.data.titulo);
       setIdEvento(retorno.data.idEvento);
-
-    } catch (error) {
-
-      setNotifyUser({
-        titleNote: "Erro",
-        textNote: `erro0 na api`,
-        imgIcon: "danger",
-        imgAlt: "Imagem de ilustração de danger.",
-        showMessage: true,
-      });
-    }
+    } catch (error) {}
   }
   function editAbort() {
     setFrmEdit(false);
-    setTitulo("");
+    setNomeEvento("");
     setDescricao("");
     setData("");
-    setOpcoes("");
-    setIdEvento(null);
+    setIdTipoEvento('');
   }
-  
+
   return (
     <MainContent>
       <Notification {...notifyUser} setNotifyUser={setNotifyUser} />
@@ -171,27 +180,25 @@ const EventosPage = () => {
                     id={"select"}
                     name={"select"}
                     required={"required"}
-                    defaultValue = {opcoes}
+                    defaultValue={idTipoEvento}
                     manipulationFunction={(e) => {
-                      setOpcoes(e.target.titulo);
+                      setIdTipoEvento(e.target.value);
                     }}
-                    additionalClass=""
                   />
 
                   <Input
                     type={"date"}
                     id={"data"}
                     name={"data"}
-                    placeholder={"AA/MM/AAAA"}
                     required={"required"}
                     value={data}
                     manipulationFunction={(e) => {
                       setData(e.target.value);
                     }}
                   />
-                  
+
                   <Button
-                    type={"submite"}
+                    type={"submit"}
                     id={"cadastrar"}
                     name={"cadastrar"}
                     textButton={"cadastrar"}
@@ -228,9 +235,9 @@ const EventosPage = () => {
                     id={"select"}
                     name={"select"}
                     required={"required"}
-                    defaultValue = {opcoes}
+                    defaultValue={idTipoEvento}
                     manipulationFunction={(e) => {
-                      setOpcoes(e.target.titulo);
+                      setIdTipoEvento(e.target.value);
                     }}
                     additionalClass=""
                   />
