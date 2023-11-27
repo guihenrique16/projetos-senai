@@ -51,7 +51,6 @@ const EventosPage = () => {
       console.log("erro na api");
     }
   }
-
   async function handleSubmit(e) {
     e.preventDefault();
     if (nomeEvento.trim().length < 3) {
@@ -97,6 +96,52 @@ const EventosPage = () => {
   }
   async function handleEdit(e) {
     e.preventDefault();
+
+    if (titulo.length < 3) {
+      setNotifyUser({
+        titleNote: "Nome de Evento Inválido",
+        textNote: `O nome do evento deve conter pelo menos 3 caracteres!`,
+        imgIcon: "warning",
+        imgAlt:
+          "Imagem de ilustração de sucesso. Moça segurando um balão com símbolo de confirmação ok.",
+        showMessage: true,
+      });
+      return;
+    }else if(new Date(data) < new Date(Date.now())){
+      setNotifyUser({
+        titleNote: "Data do Evento Inválido",
+        textNote: `Informe uma data válida para o evento!`,
+        imgIcon: "warning",
+        imgAlt:
+          "Imagem de ilustração de sucesso. Moça segurando um balão com símbolo de confirmação ok.",
+        showMessage: true,
+      });
+      return;
+    }
+
+    try {
+      const retorno = await api.put(`/Evento/${idEvento}`, {
+        nomeEvento: nome,
+        descricao: descricao,
+        dataEvento: data,
+        idTipoEvento: idTipoEvento,
+        idInstituicao: instituicao,
+      });
+
+      atualizarListaEventos();
+      editAbort();
+
+      setNotifyUser({
+        titleNote: "Evento Atualizado Com Sucesso",
+        textNote: `O Evento em questão foi atualizado com sucesso!`,
+        imgIcon: "success",
+        imgAlt:
+          "Imagem de ilustração de sucesso. Moça segurando um balão com símbolo de confirmação ok.",
+        showMessage: true,
+      });
+    } catch (error) {
+      console.log(error);
+    }
   }
   async function deleteEvent(id) {
     try {
@@ -123,7 +168,10 @@ const EventosPage = () => {
     try {
       const retorno = await api.get("/Evento/" + idElemento);
 
-      setTitulo(retorno.data.titulo);
+      setNomeEvento(retorno.data.nomeEvento);
+      setData(retorno.data.data);
+      setDescricao(retorno.data.descricao);
+      setIdTipoEvento(retorno.data.idTipoEvento);
       setIdEvento(retorno.data.idEvento);
     } catch (error) {}
   }
