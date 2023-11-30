@@ -1,36 +1,44 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import ImageIllustrator from "../../Components/ImageIllustrator/ImageIllustrator";
 import logo from "../../assets/images/logo-pink.svg";
 import { Input, Button } from "../../Components/FormComponents/FormComponents";
-import ImageLogin from'../../assets/images/login.svg'
-import api from'../../Services/Service'
+import ImageLogin from "../../assets/images/login.svg";
+import api from "../../Services/Service";
 
 import "./LoginPage.css";
 import { UserContext, userDecodeToken } from "../../context/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 const LoginPage = () => {
-  const[user, setUser] = useState({email: "", senha:""})
-  const{userData,setUserData} = useContext(UserContext)
+  const [user, setUser] = useState({ email: "", senha: "" });
+  const { userData, setUserData } = useContext(UserContext);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (userData.name) useNavigate("/");
+  }, [userData]);
 
   async function handleSubmit(e) {
     e.preventDefault();
     console.log(user);
-    if (user.email.length > 8 && user.senha.length >4 ) {
-        try {
-            const promise = await api.post("/Login",{
+    if (user.email.length > 5 && user.senha.length > 4) {
+      console.log(" ghvnbvnbvb");
+      try {
+        const promise = await api.post("/Login", {
+          email: user.email,
+          senha: user.senha,
+        });
+        console.log(promise.data);
 
-                email: user.email,
-                senha: user.senha
-            })
-            console.log(promise.data.token);
-
-            const userFullToken = userDecodeToken(promise.data.token);
-            setUserData(userFullToken)
-        } catch (error) {
-            
-        }
-    } else{
-        alert("Email ou senha invalidos");
+        const userFullToken = userDecodeToken(promise.data.token);
+        setUserData(userFullToken);
+        localStorage.setItem("token", JSON.stringify(userFullToken));
+        navigate("/")
+      } catch (error) {
+        console.log(error);
+      }
+    } else {
+      alert("Email ou senha invalidos");
     }
   }
 
@@ -49,8 +57,7 @@ const LoginPage = () => {
         <div className="frm-login">
           <img src={logo} className="frm-login__logo" alt="" />
 
-          <form className="frm-login__formbox" 
-          onSubmit={handleSubmit}>
+          <form className="frm-login__formbox" onSubmit={handleSubmit}>
             <Input
               additionalClass="frm-login__entry"
               type="email"
@@ -60,12 +67,12 @@ const LoginPage = () => {
               value={user.email}
               manipulationFunction={(e) => {
                 setUser({
-                    ...user,
-                    email: e.target.value.trim()
-                })
+                  ...user,
+                  email: e.target.value.trim(),
+                });
               }}
               placeholder="Username"
-              />
+            />
 
             <Input
               additionalClass="frm-login__entry"
@@ -76,9 +83,9 @@ const LoginPage = () => {
               value={user.senha}
               manipulationFunction={(e) => {
                 setUser({
-                    ...user,
-                    senha: e.target.value.trim()
-                })
+                  ...user,
+                  senha: e.target.value.trim(),
+                });
               }}
               placeholder="****"
             />

@@ -94,54 +94,51 @@ const EventosPage = () => {
       console.log(error);
     }
   }
-  async function handleEdit(e) {
+  async function handleEdit(e) { 
     e.preventDefault();
 
-    if (titulo.length < 3) {
+    if (nomeEvento.length < 3 && new Date(data) < new Date(Date.now())) {
       setNotifyUser({
-        titleNote: "Nome de Evento Inválido",
-        textNote: `O nome do evento deve conter pelo menos 3 caracteres!`,
+        titleNote: "Dados Inválido",
+        textNote: `Dados invalidos!(nome evento:3 caracteres) e (data dpois da atual)`,
         imgIcon: "warning",
         imgAlt:
           "Imagem de ilustração de sucesso. Moça segurando um balão com símbolo de confirmação ok.",
         showMessage: true,
       });
-      return;
-    }else if(new Date(data) < new Date(Date.now())){
-      setNotifyUser({
-        titleNote: "Data do Evento Inválido",
-        textNote: `Informe uma data válida para o evento!`,
-        imgIcon: "warning",
-        imgAlt:
-          "Imagem de ilustração de sucesso. Moça segurando um balão com símbolo de confirmação ok.",
-        showMessage: true,
-      });
-      return;
+      try {
+        await api.put(`/Evento/${idEvento}`, {
+          nomeEvento: nome,
+          descricao: descricao,
+          dataEvento: data,
+          idTipoEvento: idTipoEvento,
+          idInstituicao: instituicao,
+        });
+  
+        atualizarListaEventos();
+        editAbort();
+  
+        setNotifyUser({
+          titleNote: "Evento Atualizado Com Sucesso",
+          textNote: `O Evento em questão foi atualizado com sucesso!`,
+          imgIcon: "success",
+          imgAlt:
+            "Imagem de ilustração de sucesso. Moça segurando um balão com símbolo de confirmação ok.",
+          showMessage: true,
+        });
+      } catch (error) {
+        setNotifyUser({
+          titleNote: "Dados Inválido",
+          textNote: `erroo filha da putaa`,
+          imgIcon: "warning",
+          imgAlt:
+            "Imagem de ilustração de sucesso. Moça segurando um balão com símbolo de confirmação ok.",
+          showMessage: true,
+        });
+      }
     }
 
-    try {
-      const retorno = await api.put(`/Evento/${idEvento}`, {
-        nomeEvento: nome,
-        descricao: descricao,
-        dataEvento: data,
-        idTipoEvento: idTipoEvento,
-        idInstituicao: instituicao,
-      });
-
-      atualizarListaEventos();
-      editAbort();
-
-      setNotifyUser({
-        titleNote: "Evento Atualizado Com Sucesso",
-        textNote: `O Evento em questão foi atualizado com sucesso!`,
-        imgIcon: "success",
-        imgAlt:
-          "Imagem de ilustração de sucesso. Moça segurando um balão com símbolo de confirmação ok.",
-        showMessage: true,
-      });
-    } catch (error) {
-      console.log(error);
-    }
+    
   }
   async function deleteEvent(id) {
     try {
