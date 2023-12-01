@@ -43,7 +43,7 @@ const EventosPage = () => {
     getEventos();
   }, []);
 
-  async function atualizaLista() {
+  async function atualizarLista() {
     try {
       const promise = await api.get("/Evento");
       setEventos(promise.data);
@@ -58,19 +58,19 @@ const EventosPage = () => {
       return;
     }
     // if (eventos.dataEvento<DateTime.now) {
-      
+
     // }
     try {
       const retorno = await api.post("/Evento", {
         nomeEvento: nomeEvento,
         descricao: descricao,
         dataEvento: data,
-        idTipoEvento:  idTipoEvento,
-        idInstituicao: instituicao
+        idTipoEvento: idTipoEvento,
+        idInstituicao: instituicao,
       });
-      
-      atualizaLista() 
-      editAbort()
+
+      atualizarLista();
+      editAbort();
 
       setNotifyUser({
         titleNote: "Sucesso",
@@ -81,8 +81,6 @@ const EventosPage = () => {
         showMessage: true,
       });
       console.log(retorno.data);
-  
-
     } catch (error) {
       setNotifyUser({
         titleNote: "Erro",
@@ -94,58 +92,47 @@ const EventosPage = () => {
       console.log(error);
     }
   }
-  async function handleEdit(e) { 
+  async function handleEdit(e) {
     e.preventDefault();
 
-    if (nomeEvento.length < 3 && new Date(data) < new Date(Date.now())) {
+    try {
+      const retorno = await api.put(`/Evento/${idEvento}`, {
+        dataEvento: data,
+        nomeEvento,
+        descricao,
+        idTipoEvento,
+        idInstituicao: instituicao,
+      });
+
+      atualizarLista();
+      editAbort();
+
+      setNotifyUser({
+        titleNote: "Evento Atualizado Com Sucesso",
+        textNote: `O Evento em questão foi atualizado com sucesso!`,
+        imgIcon: "success",
+        imgAlt:
+          "Imagem de ilustração de sucesso. Moça segurando um balão com símbolo de confirmação ok.",
+        showMessage: true,
+      });
+    } catch (error) {
       setNotifyUser({
         titleNote: "Dados Inválido",
-        textNote: `Dados invalidos!(nome evento:3 caracteres) e (data dpois da atual)`,
+        textNote: `erroo filha da putaa`,
         imgIcon: "warning",
         imgAlt:
           "Imagem de ilustração de sucesso. Moça segurando um balão com símbolo de confirmação ok.",
         showMessage: true,
       });
-      try {
-        await api.put(`/Evento/${idEvento}`, {
-          nomeEvento: nome,
-          descricao: descricao,
-          dataEvento: data,
-          idTipoEvento: idTipoEvento,
-          idInstituicao: instituicao,
-        });
-  
-        atualizarListaEventos();
-        editAbort();
-  
-        setNotifyUser({
-          titleNote: "Evento Atualizado Com Sucesso",
-          textNote: `O Evento em questão foi atualizado com sucesso!`,
-          imgIcon: "success",
-          imgAlt:
-            "Imagem de ilustração de sucesso. Moça segurando um balão com símbolo de confirmação ok.",
-          showMessage: true,
-        });
-      } catch (error) {
-        setNotifyUser({
-          titleNote: "Dados Inválido",
-          textNote: `erroo filha da putaa`,
-          imgIcon: "warning",
-          imgAlt:
-            "Imagem de ilustração de sucesso. Moça segurando um balão com símbolo de confirmação ok.",
-          showMessage: true,
-        });
-      }
+      console.log(error);
     }
-
-    
   }
   async function deleteEvent(id) {
     try {
       await api.delete(`/Evento/${id}`);
       console.log("deletado com sucesso");
 
-      atualizaLista()
+      atualizarLista();
 
       setNotifyUser({
         titleNote: "Sucesso",
@@ -177,7 +164,7 @@ const EventosPage = () => {
     setNomeEvento("");
     setDescricao("");
     setData("");
-    setIdTipoEvento('');
+    setIdTipoEvento("");
   }
 
   return (
@@ -191,6 +178,7 @@ const EventosPage = () => {
             <ImageIllustrator alterText={""} imageRender={eventImage} />
 
             <form
+              action=""
               className="ftipo-evento"
               onSubmit={frmEdit ? handleEdit : handleSubmit}
             >
