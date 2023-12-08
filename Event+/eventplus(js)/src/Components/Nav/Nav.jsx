@@ -41,21 +41,11 @@ const Nav = ( { setExibeNavbar, exibeNavbar } ) => {
                         onClick={() => { setExibeNavbar(false) }} 
                         >Eventos</Link>
                     </>
-                ):(
-                    userData.role ==="Comum"
-                    <Link to="/eventos" className='navbar__item'
-                        onClick={() => { setExibeNavbar(false) }} 
-                        >Eventos</Link>
-                )}
-                <Link to="/tipo-eventos" className='navbar__item' 
-                onClick={() => { setExibeNavbar(false) }} 
-                >Tipo Eventos</Link>
-                <Link to="/eventos" className='navbar__item'
-                onClick={() => { setExibeNavbar(false) }} 
-                >Eventos</Link>
-                {/* <Link to="/login" className='navbar__item'
-                onClick={() => { setExibeNavbar(false) }} 
-                >Login</Link> */}
+                ): userData.role ==="Comum"(
+                    <>
+                        <Link to="/eventos-aluno" className='navbar__item'>Eventos Aluno</Link>
+                    </>
+                ) : (null)}
             </div>
         </nav>
     );

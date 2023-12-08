@@ -15,6 +15,12 @@
             </summary>
             <param name="optionsBuilder">Objeto com as configurações definidas</param>
         </member>
+        <member name="M:webapi.event_.Controllers.PresencaEventoController.Get">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
         <member name="T:webapi.event_.Migrations.BD">
             <inheritdoc />
         </member>
