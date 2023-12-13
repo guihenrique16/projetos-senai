@@ -9,7 +9,7 @@
 }
 
 .perfil-usuario {
-    width: 135px;
+    width: 120px;
     /* height: 40px; */
     display: flex;
     justify-content: space-between;
@@ -20,8 +20,8 @@
 }
 
 .perfil-usuario__menuitem {
-    font-family: Poppins-Thin;
-    font-size: 1rem;
+    font-family: Poppins-Regular;
+    font-size: .8rem;
     color: #201849;
     text-decoration: none;
 }
@@ -29,5 +29,6 @@
 .perfil-usuario__icon {
     width: 20px;
     margin-top: 5px;
+    cursor: pointer;
 }
 /* 201849 */

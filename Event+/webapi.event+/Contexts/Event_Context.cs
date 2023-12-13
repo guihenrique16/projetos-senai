@@ -16,7 +16,7 @@ namespace webapi.event_.Contexts
 
         public DbSet<Evento> Evento { get; set; }
 
-        public DbSet<ComentariosEvento> ComentariosEvento{ get; set; }
+        public DbSet<ComentariosEvento> ComentariosEvento { get; set; }
 
         public DbSet<Instituicao> Instituicao { get; set; }
 
@@ -28,8 +28,7 @@ namespace webapi.event_.Contexts
         /// <param name="optionsBuilder">Objeto com as configurações definidas</param>
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer("Server=NOTE08-S14; Database=eventplus_Tarde; User Id=sa; Pwd=Senai@134; TrustServerCertificate=true;");
-            base.OnConfiguring(optionsBuilder);
+            optionsBuilder.UseSqlServer("Server=tcp:eventguigarbelini-server.database.windows.net,1433;Initial Catalog=event_GuilhermeDataBase;Encrypt=True;TrustServerCertificate=True;Connection Timeout=30;User Id=guigarbelini10;Pwd=Senai@134");
         }
     }
 }

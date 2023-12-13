@@ -54,15 +54,20 @@ namespace webapi.event_.Repositories
         {
             try
             {
+                //if(evento.DataEvento < DateTime.Now)     
+                //{
+                //    throw new Exception("A data deve ser a partir de hoje!!");
+                //}
                 _context.Evento.Add(evento);
 
                 _context.SaveChanges();
+
             }
             catch (Exception)
             {
                 throw;
             }
-            
+
         }
 
         public void Deletar(Guid id)
@@ -82,34 +87,27 @@ namespace webapi.event_.Repositories
             {
                 throw;
             }
-            
-        }
 
+        }
 
         public List<Evento> Listar()
         {
             try
             {
-                return _context.Evento
-                    .Select(e => new Evento()
+                return _context.Evento.Select(e => new Evento
+                {
+                    IdEvento = e.IdEvento,
+                    DataEvento = e.DataEvento,
+                    NomeEvento = e.NomeEvento,
+                    Descricao = e.Descricao,
+                    IdInstituicao = e.IdInstituicao,
+                    IdTipoEvento = e.IdTipoEvento,
+                    TiposEvento = new TiposEvento
                     {
-                        IdEvento = e.IdEvento,
-                        NomeEvento = e.NomeEvento,
-                        Descricao = e.Descricao,
-                        DataEvento = e.DataEvento,
-                        IdTipoEvento = e.IdTipoEvento,
-                        TiposEvento = new TiposEvento()
-                        {
-                            IdTipoEvento = e.IdTipoEvento,
-                            Titulo = e.TiposEvento!.Titulo
-                        },
-                        IdInstituicao = e.IdInstituicao,
-                        Instituicao = new Instituicao()
-                        {
-                            IdInstituicao = e.IdInstituicao,
-                            NomeFantasia = e.Instituicao!.NomeFantasia
-                        }
-                    }).ToList();
+                        IdTipoEvento = e.TiposEvento.IdTipoEvento,
+                        Titulo = e.TiposEvento.Titulo
+                    }
+                }).ToList();
             }
             catch (Exception)
             {
@@ -122,7 +120,7 @@ namespace webapi.event_.Repositories
             try
             {
                 return _context.Evento
-                    .Where(e => e.DataEvento > DateTime.Now).OrderBy(e=> e.DataEvento).ToList();
+                    .Where(e => e.DataEvento > DateTime.Now).OrderBy(e => e.DataEvento).ToList();
             }
             catch (Exception)
             {

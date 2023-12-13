@@ -1,74 +1,74 @@
 import React from 'react';
 import './FormComponents.css'
 
-export const Input =({
+export const Input = ( {
     type,
     id,
     value,
     required,
-    additionalClass,
     name,
     placeholder,
-    manipulationFunction
-
-}) => {
-    return(
+    manipulationFunction,
+    additionalClass = ""
+} ) => {
+    return (
         <input 
-        type={type}
-        id={id}
-        value={value}
-        required={required}
-        className={`input-component ${additionalClass}`}
-        name={name}
-        placeholder={placeholder}
-        onChange={manipulationFunction}
-        autoComplete='off'
+            type={type} 
+            id={id} 
+            name={name} 
+            value={value} 
+            required={required ? "required" : ""} 
+            className={`input-component ${additionalClass}`}
+            placeholder={placeholder}
+            onChange={manipulationFunction}
+            autoComplete="off"
         />
+    );
+};
+
+export const Label = ({htmlFor, labelText}) => {
+    return <label htmlFor={htmlFor}>{labelText}</label>
+}
+
+// componente criado na forma tradicional props ao invés do destructuring
+export const Button = ( props ) => {
+    return (
+        <button
+            id={props.id}
+            name={props.name}
+            type={props.type}
+            className={`button-component ${props.additionalClass}`}
+            onClick={props.manipulationFunction}
+        >
+            {props.textButton}
+        </button>
     );
 }
 
-export const Button = ({
-    id,
-    name,
-    type,
-    additionalClass ='',
-    textButton,
-    manipulationFunction
-}) => {
-    return(
-        <button 
-        type={type}
-        name={name}
-        id={id}
-        className={`button-component ${additionalClass}`}
-        onClick={manipulationFunction}
-        >
-           {textButton}
-        </button>
-    )
-}
-
 export const Select = ({
-    options = [],
+    required,
     id,
     name,
-    required,
-    additionalClass = "",
+    options = [],
     manipulationFunction,
+    additionalClass = "",
     defaultValue
-}) =>{
-    return(
+}) => {
+    return (
         <select 
-        name={name} 
-        id={id}
-        required={required}
-        className={`input-component ${additionalClass}`}
-        onChange={manipulationFunction}
-        value={defaultValue}
+            name={name} 
+            id={id}
+            required={required}
+            className={`input-component ${additionalClass}`}
+            onChange={manipulationFunction}
+            value={defaultValue}
+
         >
             <option value="">Selecione</option>
-            {options.map((opt) => {
-                return <option key={opt.idTipoEvento} value={opt.idTipoEvento}>{opt.titulo}</option>
+            {options.map((o) =>{
+                return (
+                    <option key={Math.random()} value={o.value}>{o.text}</option>
+                );
             })}
         </select>
     );

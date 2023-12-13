@@ -37,6 +37,37 @@ namespace webapi.event_.Controllers
             }
         }
 
+        [HttpGet("BuscarPorId{id}")]
+        public IActionResult BuscarPorId(Guid id)
+        {
+            try
+            {
+                return StatusCode(200, _presencasEventoRepository.BuscarPorId(id));
+            }
+            catch (Exception e)
+            {
+
+                return BadRequest(e.Message);
+            }
+        }
+
+        [HttpDelete]
+        public IActionResult Deletar(Guid id)
+        {
+            try
+            {
+                _presencasEventoRepository.Deletar(id);
+
+                return NoContent();
+
+            }
+            catch (Exception e)
+            {
+
+                return BadRequest(e.Message);
+            }
+        }
+
         [HttpPost]
         public IActionResult Post(PresencasEvento presencasEvento)
         {
@@ -65,31 +96,5 @@ namespace webapi.event_.Controllers
             }
         }
 
-        [HttpDelete("{id}")]
-        public IActionResult Delete(Guid id)
-        {
-            try
-            {
-                _presencasEventoRepository.Deletar(id);
-                return NoContent();
-            }
-            catch (Exception e)
-            {
-                throw;
-            }
-        }
-
-        [HttpGet("BuscarPorId/{id}")]
-        public IActionResult GetById(Guid id)
-        {
-            try
-            {
-                return Ok(_presencasEventoRepository.BuscarPorId(id));
-            }
-            catch (Exception e)
-            {
-                return BadRequest(e.Message);
-            }
-        }
     }
 }

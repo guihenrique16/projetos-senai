@@ -1,3 +1,4 @@
+
 @font-face {
   font-family: Poppins-Regular;
   src: url(../../assets/fonts/Poppins/Poppins-Regular.ttf);
@@ -8,9 +9,10 @@
   src: url(../../assets/fonts/Poppins/Poppins-Medium.ttf);
 }
 
+
 .tooltip {
   color: #fff !important;
-  background-color: #b51d44 !important;
+  background-color: #B51D44 !important;
 }
 
 .event-card {
@@ -25,6 +27,7 @@
   overflow: auto;
 }
 
+/* Largura da barra de rolagem */
 .event-card::-webkit-scrollbar {
   width: 0px;
 }
@@ -52,6 +55,7 @@
   cursor: pointer;
 }
 
+
 @media screen and (min-width: 992px) {
   .banner {
     height: 720px;
@@ -59,6 +63,7 @@
   }
 
   .events-box {
+    
     justify-content: flex-start;
     flex-direction: row;
     flex-wrap: wrap;
