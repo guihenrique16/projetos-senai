@@ -97,11 +97,11 @@
               "type": "Microsoft.ApiManagement/service/apis",
               "name": "eventwebapiGuiGarbelini/webapievent",
               "properties": {
-                "displayName": "webapievent",
+                "displayName": "API Event+",
                 "apiRevision": "1",
-                "description": null,
+                "description": "API para gereciamento de Eventos - Backend API",
                 "subscriptionRequired": true,
-                "serviceUrl": null,
+                "serviceUrl": "https://eventwebapiguigarbelini.azurewebsites.net",
                 "path": "",
                 "protocols": [
                   "https"
