@@ -79,11 +79,11 @@ namespace webapi.event_.Controllers
 
         [HttpGet]
 
-        public IActionResult Get()
+        public IActionResult Get(Guid id)
         {
             try
             {
-                return Ok(_comentarioEventoRepository.Listar());
+                return Ok(_comentarioEventoRepository.Listar(id));
             }
             catch (Exception e)
             {
@@ -93,11 +93,11 @@ namespace webapi.event_.Controllers
 
         [HttpGet("listarSomenteExibe")]
 
-        public IActionResult GetIa()
+        public IActionResult GetIa(Guid id)
         {
             try
             {
-                return Ok(_comentarioEventoRepository.ListarTrue());
+                return Ok(_comentarioEventoRepository.ListarTrue(id));
             }
             catch (Exception e)
             {

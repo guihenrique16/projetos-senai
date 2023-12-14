@@ -42,6 +42,15 @@
         "tags": [
           "ComentarioEvento"
         ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "id",
+            "type": "string",
+            "format": "uuid",
+            "collectionFormat": "multi"
+          }
+        ],
         "responses": {
           "200": {
             "description": "Success"
@@ -97,6 +106,15 @@
       "get": {
         "tags": [
           "ComentarioEvento"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "id",
+            "type": "string",
+            "format": "uuid",
+            "collectionFormat": "multi"
+          }
         ],
         "responses": {
           "200": {
@@ -423,25 +441,6 @@
           }
         }
       },
-      "delete": {
-        "tags": [
-          "PresencaEvento"
-        ],
-        "parameters": [
-          {
-            "in": "query",
-            "name": "id",
-            "type": "string",
-            "format": "uuid",
-            "collectionFormat": "multi"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success"
-          }
-        }
-      },
       "post": {
         "tags": [
           "PresencaEvento"
@@ -468,7 +467,7 @@
         }
       }
     },
-    "/api/PresencaEvento/BuscarPorId{id}": {
+    "/api/PresencaEvento/ListarMinhas/{id}": {
       "get": {
         "tags": [
           "PresencaEvento"
@@ -490,6 +489,27 @@
       }
     },
     "/api/PresencaEvento/{id}": {
+      "delete": {
+        "tags": [
+          "PresencaEvento"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/PresencaEvento/BuscarPorId/{id}": {
       "get": {
         "tags": [
           "PresencaEvento"

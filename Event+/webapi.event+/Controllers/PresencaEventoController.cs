@@ -28,38 +28,7 @@ namespace webapi.event_.Controllers
         {
             try
             {
-                return StatusCode(200, _presencasEventoRepository.Listar());
-            }
-            catch (Exception e)
-            {
-
-                return BadRequest(e.Message);
-            }
-        }
-
-        [HttpGet("BuscarPorId{id}")]
-        public IActionResult BuscarPorId(Guid id)
-        {
-            try
-            {
-                return StatusCode(200, _presencasEventoRepository.BuscarPorId(id));
-            }
-            catch (Exception e)
-            {
-
-                return BadRequest(e.Message);
-            }
-        }
-
-        [HttpDelete]
-        public IActionResult Deletar(Guid id)
-        {
-            try
-            {
-                _presencasEventoRepository.Deletar(id);
-
-                return NoContent();
-
+                return Ok(_presencasEventoRepository.Listar());
             }
             catch (Exception e)
             {
@@ -74,7 +43,9 @@ namespace webapi.event_.Controllers
             try
             {
                 _presencasEventoRepository.Inscrever(presencasEvento);
+
                 return StatusCode(201);
+
             }
             catch (Exception e)
             {
@@ -83,16 +54,54 @@ namespace webapi.event_.Controllers
             }
         }
 
-        [HttpGet("{id}")]
+
+        [HttpGet("ListarMinhas/{id}")]
         public IActionResult GetMyList(Guid id)
         {
             try
             {
-                return StatusCode(200, _presencasEventoRepository.ListarMinhas(id));
+                return Ok(_presencasEventoRepository.ListarMinhas(id));
             }
             catch (Exception e)
             {
                 return BadRequest(e.Message);
+            }
+        }
+
+        [HttpDelete("{id}")]
+        public IActionResult Delete(Guid id)
+        {
+            try
+            {
+                _presencasEventoRepository.Deletar(id);
+
+                return NoContent();
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        [HttpGet("BuscarPorId/{id}")]
+        public IActionResult GetById(Guid id)
+        {
+            try
+            {
+                try
+                {
+                    return Ok(_presencasEventoRepository.BuscarPorId(id));
+                }
+                catch (Exception e)
+                {
+                    return BadRequest(e.Message);
+                }
+            }
+            catch (Exception)
+            {
+
+                throw;
             }
         }
 
